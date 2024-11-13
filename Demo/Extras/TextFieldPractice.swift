@@ -24,7 +24,7 @@ struct TextFieldPractice: View {
                     color = .gray.opacity(0.2)
                 }
             }
-        
+
         TextEditor(text: $name)
             .font(.headline)
             .padding()
