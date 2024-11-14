@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct NListView: View {
-    let cards: [NCard] = [
+    @State var showCreateSheet: Bool = false
+    
+    @State var cards: [NCard] = [
         NCard(title: "Card 1", text: "Texto del card 1", type: .small),
         NCard(title: "Card 2", text: "Texto del card 2", type: .medium),
         NCard(title: "Card 3", text: "Texto del card 3", type: .small),
@@ -24,6 +26,20 @@ struct NListView: View {
             }
         }
         .listStyle(.plain)
+        .sheet(isPresented: $showCreateSheet) {
+            NCreateNoteView { card in
+                cards.append(card)
+                showCreateSheet = false
+            }
+        }
+        .overlay {
+            VStack {
+                Spacer()
+                Button("Create sheet") {
+                    showCreateSheet = true
+                }
+            }
+        }
     }
 
 }

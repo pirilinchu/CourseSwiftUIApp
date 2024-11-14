@@ -13,6 +13,8 @@ struct NCreateNoteView: View {
     @State private var type: NCardType = .small
     @State private var isFavorite: Bool = false
 
+    var onNoteCreated: ((NCard) -> Void)?
+
     var isValid: Bool {
         guard !title.isEmpty else {
             return false
@@ -31,6 +33,7 @@ struct NCreateNoteView: View {
         print("New card created! \(newCard)")
 
         cleanData()
+        onNoteCreated?(newCard)
     }
 
     func cleanData() {
