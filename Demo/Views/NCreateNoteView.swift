@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct NCreateNoteView: View {
-    @State var title: String = ""
+    @State private var title: String = ""
     @State private var bodyText: String = ""
     @State private var type: NCardType = .small
     @State private var isFavorite: Bool = false
@@ -29,6 +29,8 @@ struct NCreateNoteView: View {
         let newCard = NCard(title: title, text: bodyText, type: type, isFavorite: isFavorite)
 
         print("New card created! \(newCard)")
+
+        cleanData()
     }
 
     func cleanData() {
