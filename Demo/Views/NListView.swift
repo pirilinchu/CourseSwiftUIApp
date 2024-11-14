@@ -21,7 +21,9 @@ struct NListView: View {
                     Button {
                         selectedCard = card
                     } label: {
-                        NCardView(card: card)
+                        NCardView(card: card) {
+                            appInfo.toggleFavorite(card: card)
+                        }
                     }
                     .listRowInsets(.none)
                     .listRowSeparator(.hidden)

@@ -100,4 +100,10 @@ class AppInfo: ObservableObject {
     func createCard(card: NCard) {
         cards.append(card)
     }
+
+    func toggleFavorite(card: NCard) {
+        if let index = cards.firstIndex(where: { $0.id == card.id }) {
+            cards[index].isFavorite.toggle()
+        }
+    }
 }
