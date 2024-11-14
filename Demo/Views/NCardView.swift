@@ -27,7 +27,7 @@ struct NCardView: View {
 
     @ViewBuilder
     func FavoriteButton() -> some View {
-        Image(systemName: "heart")
+        Image(systemName: card.isFavorite ? "heart.fill" : "heart")
             .foregroundStyle(Color.red)
     }
 

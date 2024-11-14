@@ -93,6 +93,10 @@ class AppInfo: ObservableObject {
               isFavorite: false),
     ]
 
+    var favorites: [NCard] {
+        cards.filter { $0.isFavorite }
+    }
+
     func createCard(card: NCard) {
         cards.append(card)
     }
