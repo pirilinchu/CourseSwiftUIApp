@@ -10,6 +10,8 @@ import SwiftUI
 struct NCardView: View {
     let card: NCard
 
+    var onToggleFavorite: (() -> Void)?
+
     var cardPrimaryColor: Color {
         Color.cyan.opacity(0.2)
     }
@@ -27,8 +29,12 @@ struct NCardView: View {
 
     @ViewBuilder
     func FavoriteButton() -> some View {
-        Image(systemName: "heart")
-            .foregroundStyle(Color.red)
+        Button {
+            onToggleFavorite?()
+        } label: {
+            Image(systemName: card.isFavorite ? "heart.fill" : "heart")
+                .foregroundStyle(Color.red)
+        }
     }
 
     @ViewBuilder

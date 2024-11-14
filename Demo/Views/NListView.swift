@@ -8,26 +8,55 @@
 import SwiftUI
 
 struct NListView: View {
-    let cards: [NCard] = [
-        NCard(title: "Card 1", text: "Texto del card 1", type: .small),
-        NCard(title: "Card 2", text: "Texto del card 2", type: .medium),
-        NCard(title: "Card 3", text: "Texto del card 3", type: .small),
-        NCard(title: "Card 4", text: "Texto del card 4", type: .large),
-    ]
+    @EnvironmentObject var appInfo: AppInfo
+    @State var showCreateSheet: Bool = false
+    @State var selectedCard: NCard?
+
+    var forFavorites: Bool = false
 
     var body: some View {
-        List {
-            ForEach(cards) { card in
-                NCardView(card: card)
+        NavigationStack {
+            List {
+                ForEach(forFavorites ? appInfo.favorites : appInfo.cards) { card in
+                    Button {
+                        selectedCard = card
+                    } label: {
+                        NCardView(card: card) {
+                            appInfo.toggleFavorite(card: card)
+                        }
+                    }
                     .listRowInsets(.none)
                     .listRowSeparator(.hidden)
+                }
             }
+            .listStyle(.plain)
+            .sheet(isPresented: $showCreateSheet) {
+                NCreateNoteView { card in
+                    appInfo.createCard(card: card)
+                    showCreateSheet = false
+                }
+            }
+            .navigationDestination(item: $selectedCard) { card in
+                NDetailView(card: card)
+            }
+            .navigationTitle("All Notes")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                Button {
+                    showCreateSheet = true
+                } label: {
+                    Image(systemName: "plus")
+                        .foregroundStyle(Color.white)
+                }
+            }
+            .toolbarBackground(Color.cyan.opacity(0.4), for: .navigationBar)
+            .toolbarBackgroundVisibility(.visible, for: .navigationBar)
         }
-        .listStyle(.plain)
     }
 
 }
 
 #Preview {
     NListView()
+        .environmentObject(AppInfo())
 }

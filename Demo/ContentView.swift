@@ -8,11 +8,18 @@
 import SwiftUI
 
 struct ContentView: View {
+    @StateObject var appInfo = AppInfo()
+
     var body: some View {
-        VStack {
+        TabView {
             NListView()
+                .tabItem { Label("Home", systemImage: "list.bullet") }
+                .toolbarBackgroundVisibility(.hidden, for: .tabBar)
+            NListView(forFavorites: true)
+                .tabItem { Label("Favorites", systemImage: "heart.fill") }
         }
-        .padding()
+        .tabViewStyle(.tabBarOnly)
+        .environmentObject(appInfo)
     }
 }
 
