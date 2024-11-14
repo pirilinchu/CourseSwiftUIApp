@@ -8,41 +8,15 @@
 import SwiftUI
 
 struct NCreateNoteView: View {
-    @State private var title: String = ""
-    @State private var bodyText: String = ""
-    @State private var type: NCardType = .small
-    @State private var isFavorite: Bool = false
-
+    @StateObject private var viewModel = NCreateNoteViewModel()
     @State private var showHeart: Bool = false
 
     var onNoteCreated: ((NCard) -> Void)?
 
-    var isValid: Bool {
-        guard !title.isEmpty else {
-            return false
-        }
-
-        return true
-    }
-
     func createNote() {
-        guard isValid else {
-            return
+        if let newCard = viewModel.createNote() {
+            onNoteCreated?(newCard)
         }
-
-        let newCard = NCard(title: title, text: bodyText, type: type, isFavorite: isFavorite)
-
-        print("New card created! \(newCard)")
-
-        cleanData()
-        onNoteCreated?(newCard)
-    }
-
-    func cleanData() {
-        title = ""
-        bodyText = ""
-        type = .small
-        isFavorite = false
     }
 
     var body: some View {
@@ -53,12 +27,12 @@ struct NCreateNoteView: View {
                     .bold()
                     .multilineTextAlignment(.leading)
                     .padding(.bottom, 10)
-                TextField("Titulo", text: $title)
+                TextField("Titulo", text: $viewModel.title)
                     .font(.headline)
                     .padding()
                     .background(Color.gray.opacity(0.1))
                     .cornerRadius(8)
-                TextEditor(text: $bodyText)
+                TextEditor(text: $viewModel.bodyText)
                     .scrollContentBackground(.hidden)
                     .font(.body)
                     .frame(height: 150)
@@ -68,7 +42,7 @@ struct NCreateNoteView: View {
                 HStack {
                     Text("Tamaño")
                     Spacer()
-                    Picker("Tipo de Nota", selection: $type) {
+                    Picker("Tipo de Nota", selection: $viewModel.type) {
                         Text("Pequeño").tag(NCardType.small)
                         Text("Mediano").tag(NCardType.medium)
                         Text("Grande").tag(NCardType.large)
@@ -76,12 +50,12 @@ struct NCreateNoteView: View {
                     .pickerStyle(.menu)
                 }
                 .padding()
-                Toggle(isOn: $isFavorite) {
+                Toggle(isOn: $viewModel.isFavorite) {
                     Text("Marcar como Favorito")
                         .font(.headline)
                 }
                 .padding()
-                NButton(title: "Guardar Nota", isValid: isValid) {
+                NButton(title: "Guardar Nota", isValid: viewModel.isValid) {
                     createNote()
                 }
                 .padding(.top, 20)
@@ -110,7 +84,7 @@ struct NCreateNoteView: View {
                     }
             }
         }
-        .onChange(of: isFavorite) { _, newValue in
+        .onChange(of: viewModel.isFavorite) { _, newValue in
             if newValue == true {
                 withAnimation {
                     showHeart = true
