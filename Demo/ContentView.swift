@@ -8,11 +8,13 @@
 import SwiftUI
 
 struct ContentView: View {
+    @StateObject var appInfo = AppInfo()
+
     var body: some View {
         VStack {
             NListView()
         }
-        .padding()
+        .environmentObject(appInfo)
     }
 }
 

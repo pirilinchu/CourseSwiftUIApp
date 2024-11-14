@@ -8,18 +8,12 @@
 import SwiftUI
 
 struct NListView: View {
+    @EnvironmentObject var appInfo: AppInfo
     @State var showCreateSheet: Bool = false
-    
-    @State var cards: [NCard] = [
-        NCard(title: "Card 1", text: "Texto del card 1", type: .small),
-        NCard(title: "Card 2", text: "Texto del card 2", type: .medium),
-        NCard(title: "Card 3", text: "Texto del card 3", type: .small),
-        NCard(title: "Card 4", text: "Texto del card 4", type: .large),
-    ]
 
     var body: some View {
         List {
-            ForEach(cards) { card in
+            ForEach(appInfo.cards) { card in
                 NCardView(card: card)
                     .listRowInsets(.none)
                     .listRowSeparator(.hidden)
@@ -28,7 +22,7 @@ struct NListView: View {
         .listStyle(.plain)
         .sheet(isPresented: $showCreateSheet) {
             NCreateNoteView { card in
-                cards.append(card)
+                appInfo.createCard(card: card)
                 showCreateSheet = false
             }
         }
@@ -46,4 +40,5 @@ struct NListView: View {
 
 #Preview {
     NListView()
+        .environmentObject(AppInfo())
 }
