@@ -13,6 +13,8 @@ struct NCreateNoteView: View {
     @State private var type: NCardType = .small
     @State private var isFavorite: Bool = false
 
+    @State private var showHeart: Bool = false
+
     var onNoteCreated: ((NCard) -> Void)?
 
     var isValid: Bool {
@@ -91,6 +93,30 @@ struct NCreateNoteView: View {
         .shadow(color: Color.black.opacity(0.1), radius: 10, x: 0, y: 5)
         .padding()
         .background(Color.cyan.opacity(0.2))
+        .overlay {
+            if showHeart {
+                Image(systemName: "heart.fill")
+                    .resizable()
+                    .foregroundStyle(Color.red)
+                    .frame(width: 100, height: 100)
+                    .transition(.scale)
+                    .onAppear {
+                        let delay = DispatchTime.now() + 1
+                        DispatchQueue.main.asyncAfter(deadline: delay) {
+                            withAnimation {
+                                showHeart = false
+                            }
+                        }
+                    }
+            }
+        }
+        .onChange(of: isFavorite) { _, newValue in
+            if newValue == true {
+                withAnimation {
+                    showHeart = true
+                }
+            }
+        }
     }
 }
 
